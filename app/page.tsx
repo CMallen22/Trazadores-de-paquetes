@@ -1,12 +1,12 @@
 // pages/index.js
-import Navbar from "../app/components/Navbar";
-import App from "../app/components/App";
+//import Navbar from "../app/components/Navbar";
+import App from "../app/Components/App";
 
 export default function Home() {
   return (
     <div>
       <div> 
-        <Navbar />
+        {/*<Navbar />*/}
         <div className="text-left text-4xl font-bold ml-20 mt-2">
           Espacio de trabajo
         </div>
