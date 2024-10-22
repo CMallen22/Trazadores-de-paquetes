@@ -1,5 +1,7 @@
 "use client"; 
 
+import Image from 'next/image';
+import imagen from '@/app/login/imagen.png';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -37,10 +39,12 @@ const Login = () => {
         
         {/* Imagen PNG debajo del texto */}
         <div style={{ marginBottom: '20px' }}>
-          <img 
-            src="imagen.png" 
+          <Image 
+            src={imagen} 
             alt="Imagen de seguridad"
-            style={{ maxWidth: '100%', height: 'auto' }}
+            width={512}
+            height={512}
+            
           />
         </div>
       </div>
