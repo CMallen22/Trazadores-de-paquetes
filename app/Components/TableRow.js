@@ -11,7 +11,6 @@ const getAmenazaLabel = (value) => {
 
 const TableRow = ({ row, index, dropdownIndex, handleDropdownClick, handleOptionClick, options }) => {
   const { label, color, iconColor } = getAmenazaLabel(row.Amenaza);
-
   return (
     <tr key={index}>
       <td className="py-4 px-1 border-b">
@@ -20,6 +19,7 @@ const TableRow = ({ row, index, dropdownIndex, handleDropdownClick, handleOption
       <td className="py-4 px-4 border-b">{row.Fuente}</td>
       <td className="py-4 px-4 border-b">{row.Destino}</td>
       <td className="py-4 px-4 border-b">{row.Protocolo}</td>
+      <td className="py-4 px-4 border-b">{row.Area}</td>
       <td className="py-4 px-4 border-b">{row.Fecha}</td>
       <td className={`py-4 px-4 border-b flex items-center ${color}`}>
         <ShieldExclamationIcon className={`h-6 w-6 mr-2 ${iconColor}`} />
