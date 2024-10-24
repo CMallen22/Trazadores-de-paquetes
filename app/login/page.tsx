@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import Image from 'next/image';
 import imagen from '@/app/login/imagen.png';
@@ -10,21 +10,45 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Make a POST request to your API with username and password
+    try {
+      const response = await fetch('http://localhost:3000/db', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      const data = await response.json();
+      console.log('API Response:', data); // Log the API response
+  
+      // Check if authentication is successful (any value except '0')
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      if (data !== '0') {
+        localStorage.setItem('isAuthenticated', 'true');
+        router.push('/'); // Redirect to the main page
+      }
+        
+      
+      else {
 
-    // Simulación de autenticación con admin/admin
-    if (username === 'admin' && password === 'admin') {
-      localStorage.setItem('isAuthenticated', 'true'); // Guarda autenticación en localStorage
-      router.push('/'); // Redirige a la página principal
-    } else {
-      alert('Credenciales incorrectas');
+        alert('Credenciales incorrectas');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert('Error al iniciar sesión');
     }
   };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {/* Sección izquierda (Imagen y texto) */}
+      {/* Left Section (Image and Text) */}
       <div style={{ 
         width: '50%', 
         backgroundColor: '#5e2d91', 
@@ -37,19 +61,18 @@ const Login = () => {
       }}>
         <h1 style={{ fontSize: '3em', marginBottom: '20px', textAlign: 'center' }}>Mantén tu red segura</h1>
         
-        {/* Imagen PNG debajo del texto */}
+        {/* Image */}
         <div style={{ marginBottom: '20px' }}>
           <Image 
             src={imagen} 
             alt="Imagen de seguridad"
             width={512}
             height={512}
-            
           />
         </div>
       </div>
 
-      {/* Sección derecha (Formulario de login) */}
+      {/* Right Section (Login Form) */}
       <div style={{ 
         width: '50%', 
         display: 'flex', 
@@ -111,7 +134,7 @@ const Login = () => {
                 cursor: 'pointer'
               }}
             >
-              Sign Up
+              Iniciar Sesión
             </button>
           </form>
         </div>
