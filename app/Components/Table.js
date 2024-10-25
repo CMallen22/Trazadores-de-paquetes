@@ -1,3 +1,4 @@
+// Table.js
 import React, { useState, useEffect } from 'react';
 import TableRow from './TableRow';
 import FilterDropdown from './FilterDropdown';
@@ -75,6 +76,15 @@ const Table = ({ data, onUpdateAmenaza }) => {
     { label: 'Alto', color: 'text-red-600', iconColor: 'text-red-600' },
   ];
 
+  const filteredData = data
+    .filter((row) =>
+      filteredProtocols.find((protocol) => protocol.label === row.Protocolo && protocol.checked)
+    )
+    .filter((row) =>
+      filteredAreas.find((area) => area.label === row.Area && area.checked)
+    )
+    .filter((row) => filteredAmenazas.includes(getAmenazaLabel(row.Amenaza).label));
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
@@ -118,15 +128,14 @@ const Table = ({ data, onUpdateAmenaza }) => {
           </tr>
         </thead>
         <tbody>
-          {data
-            .filter((row) =>
-              filteredProtocols.find((protocol) => protocol.label === row.Protocolo && protocol.checked)
-            )
-            .filter((row) =>
-              filteredAreas.find((area) => area.label === row.Area && area.checked)
-            )
-            .filter((row) => filteredAmenazas.includes(getAmenazaLabel(row.Amenaza).label))
-            .map((row, index) => (
+          {filteredData.length === 0 ? (
+            <tr>
+              <td colSpan={8} className="py-10 text-center text-gray-500">
+                Sin datos disponibles
+              </td>
+            </tr>
+          ) : (
+            filteredData.map((row, index) => (
               <TableRow
                 key={index}
                 row={row}
@@ -136,7 +145,8 @@ const Table = ({ data, onUpdateAmenaza }) => {
                 handleOptionClick={handleOptionClick}
                 options={amenazaOptions}
               />
-            ))}
+            ))
+          )}
         </tbody>
       </table>
     </div>

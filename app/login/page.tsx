@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import Image from 'next/image';
 import imagen from '@/app/login/imagen.png';
@@ -23,93 +23,52 @@ const Login = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <div className="flex h-screen">
       {/* Sección izquierda (Imagen y texto) */}
-      <div style={{ 
-        width: '50%', 
-        backgroundColor: '#5e2d91', 
-        color: 'white', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        flexDirection: 'column', 
-        padding: '20px' 
-      }}>
-        <h1 style={{ fontSize: '3em', marginBottom: '20px', textAlign: 'center' }}>Mantén tu red segura</h1>
+      <div className="w-1/2 bg-purple-800 text-white flex flex-col items-center justify-center p-5">
+        <h1 className="text-4xl mb-5 text-center">Mantén tu red segura</h1>
         
         {/* Imagen PNG debajo del texto */}
-        <div style={{ marginBottom: '20px' }}>
+        <div className="mb-5">
           <Image 
             src={imagen} 
             alt="Imagen de seguridad"
             width={512}
             height={512}
-            
           />
         </div>
       </div>
 
       {/* Sección derecha (Formulario de login) */}
-      <div style={{ 
-        width: '50%', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        flexDirection: 'column'
-      }}>
-        <div style={{ width: '80%', maxWidth: '300px' }}>
-          <h2 style={{ fontSize: '2.5em', marginBottom: '20px', textAlign: 'center' }}>Iniciar sesión</h2>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Username</label>
+      <div className="w-1/2 flex flex-col items-center justify-center">
+        <div className="w-4/5 max-w-sm">
+          <h2 className="text-3xl mb-5 text-center">Iniciar sesión</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <div className="mb-4">
+              <label className="text-base mb-2 block">Username</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 10px',
-                  marginTop: '5px',
-                  marginBottom: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  fontSize: '1em'
-                }}
+                className="w-full p-3 mt-1 mb-2 border border-gray-300 rounded-md text-base"
                 placeholder="Enter your username"
                 required
               />
             </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Password</label>
+            <div className="mb-4">
+              <label className="text-base mb-2 block">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 10px',
-                  marginTop: '5px',
-                  marginBottom: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  fontSize: '1em'
-                }}
+                className="w-full p-3 mt-1 mb-2 border border-gray-300 rounded-md text-base"
                 placeholder="Enter your password"
                 required
               />
             </div>
             <button
               type="submit"
-              style={{ 
-                width: '100%', 
-                padding: '12px', 
-                backgroundColor: '#5e2d91', 
-                color: 'white', 
-                border: 'none', 
-                borderRadius: '4px', 
-                fontSize: '1em',
-                cursor: 'pointer'
-              }}
+              className="w-full p-3 bg-purple-800 text-white rounded-md text-base cursor-pointer"
             >
               Sign Up
             </button>
