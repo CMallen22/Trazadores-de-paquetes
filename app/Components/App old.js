@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import ExcelUploader from './ExcelUploader';
 import Table from './Table';
+//import LogsCard from '../Cards/LogsCard';
 
 const App = () => {
   const [data, setData] = useState([]);

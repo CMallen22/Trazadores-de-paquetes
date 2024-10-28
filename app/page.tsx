@@ -1,6 +1,6 @@
 // pages/index.js
 import Navbar from "../app/Components/Navbar";
-import App from "../app/Components/App";
+import App from "./Components/App";
 
 export default function Home() {
   return (
