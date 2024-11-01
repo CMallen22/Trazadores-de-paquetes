@@ -10,6 +10,7 @@ type Log = {
   fuente: string;
   destino: string;
   protocolo: string;
+  area: string;
   fecha: string;
   riesgo: number;
 
@@ -55,6 +56,7 @@ export default function  App () {
           Fuente={log.fuente}
           Destino={log.destino}
           Protocolo={log.protocolo}
+          Area={log.area}
           Fecha={log.fecha}
           Riesgo={log.riesgo}
         />
