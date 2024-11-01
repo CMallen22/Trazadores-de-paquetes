@@ -1,3 +1,7 @@
+Install node js version v20.12.1 or newer, you can found it on this link https://nodejs.org/en/download/prebuilt-installer 
+
+In the terminal on your proyect write the next command "npm install"
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
