@@ -59,7 +59,7 @@ const Login = () => {
         flexDirection: 'column', 
         padding: '20px' 
       }}>
-        <h1 style={{ fontSize: '3em', marginBottom: '20px', textAlign: 'center' }}>Mantén tu red segura</h1>
+        <h1 style={{ fontSize: '3em', marginBottom: '20px', textAlign: 'center' }}>Net-Alert</h1>
         
         {/* Image */}
         <div style={{ marginBottom: '20px' }}>

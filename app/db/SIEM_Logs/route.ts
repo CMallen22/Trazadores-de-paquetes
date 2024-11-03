@@ -1,3 +1,4 @@
+// route.ts
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
@@ -8,7 +9,7 @@ export async function GET() {
     
 
     // Execute the query with provided username and password
-    const result = await sql`select fuente, destino, protocolo, area, fecha, riesgo from logs2;`;
+    const result = await sql`select fuente, destino, protocolo, area, fecha, riesgo, advertencia_ia, recomendacion_ia from logs2;`;
 
     // Assuming 'login' function returns true if successful
     const Logs = result.rows
