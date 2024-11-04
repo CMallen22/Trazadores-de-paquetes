@@ -48,7 +48,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
   };
 
   const handleAccept = () => {
-    // Lógica para guardar cambios
+    // Aquí se enviaría la petición al servidor para actualizar el área y el nivel de riesgo
     setIsMenuOpen(false);
   };
 
@@ -59,13 +59,12 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
       {isMenuOpen && (
         <div
           className="fixed inset-0 bg-transparent z-10"
-          onClick={closeMenu}
-        ></div>
+          onClick={closeMenu}>
+        </div>
       )}
       <div
         className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 items-center p-2 cursor-pointer"
-        onClick={toggleExpand}
-      >
+        onClick={toggleExpand}>
         <div className="flex items-center justify-center">
           {isExpanded ? (
             <ChevronUpIcon className="h-6 w-6 text-purple-500" />
@@ -85,15 +84,13 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
         <div className="relative">
           <div
             className="flex items-center justify-center cursor-pointer"
-            onClick={toggleMenu}
-          >
+            onClick={toggleMenu}>
             <DotsVerticalIcon className={`h-6 w-6 ${isMenuOpen ? "text-purple-500" : "text-black"}`} />
           </div>
           {isMenuOpen && (
             <div
               className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-20 w-64"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               <div className="mb-4">
                 <label className="block text-gray-700 font-semibold mb-1">Cambiar Área:</label>
                 <input
@@ -101,8 +98,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
                   value={newArea}
                   onChange={handleAreaChange}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Escribe el área"
-                />
+                  placeholder="Escribe el área"/>
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 font-semibold mb-1">Cambiar Nivel de Riesgo:</label>
@@ -112,8 +108,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
                   onChange={handleRiskChange}
                   className="w-full p-2 border border-gray-300 rounded mb-2"
                   min="0"
-                  max="100"
-                />
+                  max="100"/>
                 <input
                   type="range"
                   value={newRisk}
@@ -122,14 +117,12 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
                   min="0"
                   max="100"
                   style={{
-                    accentColor: "#7c3aed", // Purple 600
-                  }}
-                />
+                    accentColor: "#7c3aed", 
+                  }}/>
               </div>
               <button
                 onClick={handleAccept}
-                className="w-full p-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700"
-              >
+                className="w-full p-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700">
                 Aceptar
               </button>
             </div>

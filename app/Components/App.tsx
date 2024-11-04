@@ -40,22 +40,19 @@ export default function App() {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-
-        // Asegura que data.Logs es un array de Log
         const logsData = data.Logs as Log[];
 
         if (Array.isArray(logsData)) {
           setLogs(logsData);
-          setFilteredLogs(logsData); // Inicializa los logs filtrados
+          setFilteredLogs(logsData); 
           
-          // Extrae las áreas y protocolos únicos y actualiza las opciones correspondientes
           const uniqueAreas = Array.from(new Set(logsData.map((log) => log.area))) as string[];
           setAreaOptions(uniqueAreas);
-          setSelectedAreas(uniqueAreas); // Selecciona todas las áreas de forma predeterminada
+          setSelectedAreas(uniqueAreas); 
 
           const uniqueProtocols = Array.from(new Set(logsData.map((log) => log.protocolo))) as string[];
           setProtocolOptions(uniqueProtocols);
-          setSelectedProtocols(uniqueProtocols); // Selecciona todos los protocolos de forma predeterminada
+          setSelectedProtocols(uniqueProtocols); 
         } else {
           console.error("Logs data is not an array:", data);
         }
@@ -67,7 +64,6 @@ export default function App() {
     fetchData();
   }, []);
 
-  // Asigna el nivel de riesgo en función del número
   const getRiskLabel = (riesgo: number) => {
     if (riesgo >= 0 && riesgo <= 10) return "Seguro";
     if (riesgo >= 11 && riesgo <= 33) return "Bajo";
@@ -76,7 +72,6 @@ export default function App() {
     return "Desconocido";
   };
 
-  // Maneja cambios de selección en los riesgos
   const handleRiskChange = (risk: string) => {
     const newSelectedRisks = selectedRisks.includes(risk)
       ? selectedRisks.filter((r) => r !== risk)
@@ -84,7 +79,6 @@ export default function App() {
     setSelectedRisks(newSelectedRisks);
   };
 
-  // Maneja cambios de selección en las áreas
   const handleAreaChange = (area: string) => {
     const newSelectedAreas = selectedAreas.includes(area)
       ? selectedAreas.filter((a) => a !== area)
@@ -92,7 +86,6 @@ export default function App() {
     setSelectedAreas(newSelectedAreas);
   };
 
-  // Maneja cambios de selección en los protocolos
   const handleProtocolChange = (protocol: string) => {
     const newSelectedProtocols = selectedProtocols.includes(protocol)
       ? selectedProtocols.filter((p) => p !== protocol)
@@ -100,7 +93,6 @@ export default function App() {
     setSelectedProtocols(newSelectedProtocols);
   };
 
-  // Filtra los logs según las opciones seleccionadas de riesgo, área y protocolo
   useEffect(() => {
     const riskFilteredLogs = logs.filter((log) =>
       selectedRisks.includes(getRiskLabel(log.riesgo))
@@ -125,8 +117,7 @@ export default function App() {
             Protocolo
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isProtocolDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsProtocolDropdownOpen(!isProtocolDropdownOpen)}
-            />
+              onClick={() => setIsProtocolDropdownOpen(!isProtocolDropdownOpen)}/>
             {isProtocolDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {protocolOptions.map((protocol) => (
@@ -135,8 +126,7 @@ export default function App() {
                       type="checkbox"
                       checked={selectedProtocols.includes(protocol)}
                       onChange={() => handleProtocolChange(protocol)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
-                    />
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
                     <label className="ml-2 text-gray-700">{protocol}</label>
                   </div>
                 ))}
@@ -147,8 +137,7 @@ export default function App() {
             Área
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isAreaDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}
-            />
+              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}/>
             {isAreaDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {areaOptions.map((area) => (
@@ -157,8 +146,7 @@ export default function App() {
                       type="checkbox"
                       checked={selectedAreas.includes(area)}
                       onChange={() => handleAreaChange(area)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
-                    />
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
                     <label className="ml-2 text-gray-700">{area}</label>
                   </div>
                 ))}
@@ -170,8 +158,7 @@ export default function App() {
             Riesgo
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isRiskDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsRiskDropdownOpen(!isRiskDropdownOpen)}
-            />
+              onClick={() => setIsRiskDropdownOpen(!isRiskDropdownOpen)}/>
             {isRiskDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {RISK_LEVELS.map((risk) => (
@@ -180,8 +167,7 @@ export default function App() {
                       type="checkbox"
                       checked={selectedRisks.includes(risk)}
                       onChange={() => handleRiskChange(risk)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
-                    />
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
                     <label className="ml-2">{risk}</label>
                   </div>
                 ))}
@@ -201,8 +187,7 @@ export default function App() {
             Fecha={log.fecha}
             Riesgo={log.riesgo}
             advertencia_ia={log.advertencia_ia}
-            recomendacion_ia={log.recomendacion_ia}
-          />
+            recomendacion_ia={log.recomendacion_ia}/>
         ))}
       </div>
     </main>
