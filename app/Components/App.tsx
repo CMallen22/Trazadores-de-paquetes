@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import LogsCard from "../Cards/LogsCard";
 import { Inter } from "next/font/google";
-import { FilterIcon } from "@heroicons/react/outline";
+import { FilterIcon, ShieldExclamationIcon } from "@heroicons/react/outline";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,12 @@ type Log = {
   recomendacion_ia: string;
 };
 
-const RISK_LEVELS = ["Seguro", "Bajo", "Medio", "Alto"];
+const RISK_LEVELS = [
+  { label: "Seguro", min: 0, max: 10, color: "text-green-500" },
+  { label: "Bajo", min: 11, max: 33, color: "text-yellow-400" },
+  { label: "Medio", min: 34, max: 66, color: "text-orange-500" },
+  { label: "Alto", min: 67, max: 100, color: "text-red-600" },
+];
 
 export default function App() {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -26,7 +31,7 @@ export default function App() {
   const [isRiskDropdownOpen, setIsRiskDropdownOpen] = useState(false);
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState(false);
   const [isProtocolDropdownOpen, setIsProtocolDropdownOpen] = useState(false);
-  const [selectedRisks, setSelectedRisks] = useState<string[]>(RISK_LEVELS);
+  const [selectedRisks, setSelectedRisks] = useState<string[]>(RISK_LEVELS.map((risk) => risk.label));
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
   const [selectedProtocols, setSelectedProtocols] = useState<string[]>([]);
   const [areaOptions, setAreaOptions] = useState<string[]>([]);
@@ -44,15 +49,15 @@ export default function App() {
 
         if (Array.isArray(logsData)) {
           setLogs(logsData);
-          setFilteredLogs(logsData); 
-          
+          setFilteredLogs(logsData);
+
           const uniqueAreas = Array.from(new Set(logsData.map((log) => log.area))) as string[];
           setAreaOptions(uniqueAreas);
-          setSelectedAreas(uniqueAreas); 
+          setSelectedAreas(uniqueAreas);
 
           const uniqueProtocols = Array.from(new Set(logsData.map((log) => log.protocolo))) as string[];
           setProtocolOptions(uniqueProtocols);
-          setSelectedProtocols(uniqueProtocols); 
+          setSelectedProtocols(uniqueProtocols);
         } else {
           console.error("Logs data is not an array:", data);
         }
@@ -65,10 +70,9 @@ export default function App() {
   }, []);
 
   const getRiskLabel = (riesgo: number) => {
-    if (riesgo >= 0 && riesgo <= 10) return "Seguro";
-    if (riesgo >= 11 && riesgo <= 33) return "Bajo";
-    if (riesgo >= 34 && riesgo <= 66) return "Medio";
-    if (riesgo >= 67 && riesgo <= 100) return "Alto";
+    for (const level of RISK_LEVELS) {
+      if (riesgo >= level.min && riesgo <= level.max) return level.label;
+    }
     return "Desconocido";
   };
 
@@ -161,14 +165,15 @@ export default function App() {
               onClick={() => setIsRiskDropdownOpen(!isRiskDropdownOpen)}/>
             {isRiskDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
-                {RISK_LEVELS.map((risk) => (
-                  <div key={risk} className="flex items-center mb-2">
+                {RISK_LEVELS.map(({ label, color }) => (
+                  <div key={label} className="flex items-center mb-2">
                     <input
                       type="checkbox"
-                      checked={selectedRisks.includes(risk)}
-                      onChange={() => handleRiskChange(risk)}
+                      checked={selectedRisks.includes(label)}
+                      onChange={() => handleRiskChange(label)}
                       className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
-                    <label className="ml-2">{risk}</label>
+                    <ShieldExclamationIcon className={`h-5 w-5 ml-2 ${color}`} />
+                    <label className={`ml-2 ${color}`}>{label}</label>
                   </div>
                 ))}
               </div>
