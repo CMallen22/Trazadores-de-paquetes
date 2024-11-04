@@ -22,17 +22,55 @@ const getAmenazaColor = (riesgo: number) => {
 
 const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendacion_ia, advertencia_ia }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [newArea, setNewArea] = useState(Area);
+  const [newRisk, setNewRisk] = useState(Riesgo);
+
   const { label, color, textColor } = getAmenazaColor(Riesgo);
 
+  const toggleExpand = () => setIsExpanded(!isExpanded);
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewArea(e.target.value);
+  };
+
+  const handleRiskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(0, Math.min(100, Number(e.target.value)));
+    setNewRisk(value);
+  };
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewRisk(Number(e.target.value));
+  };
+
+  const handleAccept = () => {
+    // Lógica para guardar cambios
+    setIsMenuOpen(false);
+  };
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <div className="border-b border-gray-300">
-      {/* Fila principal */}
-      <div className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 items-center p-2 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+    <div className="border-b border-gray-300 relative">
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-transparent z-10"
+          onClick={closeMenu}
+        ></div>
+      )}
+      <div
+        className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 items-center p-2 cursor-pointer"
+        onClick={toggleExpand}
+      >
         <div className="flex items-center justify-center">
           {isExpanded ? (
-            <ChevronUpIcon className="h-5 w-5 text-gray-500" />
+            <ChevronUpIcon className="h-6 w-6 text-purple-500" />
           ) : (
-            <ChevronDownIcon className="h-5 w-5 text-gray-500" />
+            <ChevronDownIcon className="h-6 w-6 text-black" />
           )}
         </div>
         <span className="text-black">{Fuente}</span>
@@ -44,18 +82,63 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
           <ShieldExclamationIcon className={`h-5 w-5 mr-1 ${textColor}`} />
           <span className={`${textColor} font-semibold`}>{label}</span>
         </div>
-        <div
-          className="flex items-center justify-center"
-          onClick={(e) => e.stopPropagation()} // Evita que el clic en el ícono de tres puntos expanda la tarjeta
-        >
-          <DotsVerticalIcon className="h-5 w-5 text-gray-500" />
+        <div className="relative">
+          <div
+            className="flex items-center justify-center cursor-pointer"
+            onClick={toggleMenu}
+          >
+            <DotsVerticalIcon className={`h-6 w-6 ${isMenuOpen ? "text-purple-500" : "text-black"}`} />
+          </div>
+          {isMenuOpen && (
+            <div
+              className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-20 w-64"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4">
+                <label className="block text-gray-700 font-semibold mb-1">Cambiar Área:</label>
+                <input
+                  type="text"
+                  value={newArea}
+                  onChange={handleAreaChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="Escribe el área"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 font-semibold mb-1">Cambiar Nivel de Riesgo:</label>
+                <input
+                  type="number"
+                  value={newRisk}
+                  onChange={handleRiskChange}
+                  className="w-full p-2 border border-gray-300 rounded mb-2"
+                  min="0"
+                  max="100"
+                />
+                <input
+                  type="range"
+                  value={newRisk}
+                  onChange={handleSliderChange}
+                  className="w-full text-purple-600"
+                  min="0"
+                  max="100"
+                  style={{
+                    accentColor: "#7c3aed", // Purple 600
+                  }}
+                />
+              </div>
+              <button
+                onClick={handleAccept}
+                className="w-full p-2 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700"
+              >
+                Aceptar
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Vista expandida */}
       {isExpanded && (
         <div className="flex justify-between space-x-4 mt-2 bg-gray-100 p-4 rounded-lg">
-          {/* Tarjeta de nivel de riesgo */}
           <div className={`p-6 rounded-lg text-center text-white ${color}`} style={{ width: "150px" }}>
             <p className="text-sm">Nivel de Riesgo</p>
             <p className="text-4xl font-bold">{Riesgo}</p>
@@ -63,13 +146,11 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
             <p className="mt-2 font-semibold">{label}</p>
           </div>
 
-          {/* Advertencia IA */}
           <div className="flex-1 p-4 bg-white rounded-lg shadow">
             <h4 className="text-lg font-bold mb-2">Advertencia IA:</h4>
             <p>{advertencia_ia || "Sin advertencias disponibles."}</p>
           </div>
 
-          {/* Recomendación IA */}
           <div className="flex-1 p-4 bg-white rounded-lg shadow">
             <h4 className="text-lg font-bold mb-2">Recomendación IA:</h4>
             <p>{recomendacion_ia || "Sin recomendaciones disponibles."}</p>
