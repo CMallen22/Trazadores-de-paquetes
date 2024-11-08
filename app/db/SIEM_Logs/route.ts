@@ -8,7 +8,7 @@ export async function GET() {
     
 
     // Execute the query with provided username and password
-    const result = await sql`select fuente, destino, protocolo, area, fecha, riesgo from logs2;`;
+    const result = await sql`select id_logs, fuente, destino, protocolo, area, fecha, riesgo from logs2 order by id_logs asc;`;
 
     // Assuming 'login' function returns true if successful
     const Logs = result.rows
