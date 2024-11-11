@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Navbar from "../Components/Navbar";
 import UsersCard from "../Cards/UsersCard";
 import { Inter } from "next/font/google";
 
@@ -40,7 +39,6 @@ const [users, setUsers] = useState<User[]>(
 
   return (
     <div>
-        <Navbar />
         <main className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}>
         
   <div className="flex flex-col space-y-2"> {/* Stack each LogsCard vertically with space between rows */}

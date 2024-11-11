@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { event_code, source_ip, host_ip } = await request.json();
+    const { event_code, source_ip, host_ip, descripcion } = await request.json();
 
     // Execute the query with provided username and password
-    const result = await sql`INSERT INTO alertas (event_code, source_ip, host_ip) VALUES (${event_code}, ${source_ip}, ${host_ip});`;
+    const result = await sql`INSERT INTO alertas (event_code, source_ip, host_ip, descripcion) VALUES (${event_code}, ${source_ip}, ${host_ip}, ${descripcion});`;
 
     // Assuming 'login' function returns true if successful
     //const loginSuccess = result.rows[0]?.login;
