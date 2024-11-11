@@ -1,8 +1,7 @@
 "use client";
 
-import Image from 'next/image';
-import imagen from '@/app/login/imagen.png';
 import React, { useState } from 'react';
+import { ShieldExclamationIcon } from '@heroicons/react/solid'; 
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
@@ -13,7 +12,6 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
-    // Make a POST request to your API with username and password
     try {
       const response = await fetch('http://localhost:3000/db', {
         method: 'POST',
@@ -24,31 +22,25 @@ const Login = () => {
       });
   
       const data = await response.json();
-      console.log('API Response:', data); // Log the API response
+      console.log('Respuesta de la API:', data); 
   
-      // Check if authentication is successful (any value except '0')
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Error al obtener datos");
       }
       if (data !== '0') {
         localStorage.setItem('isAuthenticated', 'true');
-        router.push('/'); // Redirect to the main page
-      }
-        
-      
-      else {
-
+        router.push('/'); 
+      } else {
         alert('Credenciales incorrectas');
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error durante el inicio de sesión:', error);
       alert('Error al iniciar sesión');
     }
   };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      {/* Left Section (Image and Text) */}
       <div style={{ 
         width: '50%', 
         backgroundColor: '#5e2d91', 
@@ -60,19 +52,13 @@ const Login = () => {
         padding: '20px' 
       }}>
         <h1 style={{ fontSize: '3em', marginBottom: '20px', textAlign: 'center' }}>Net-Alert</h1>
-        
-        {/* Image */}
         <div style={{ marginBottom: '20px' }}>
-          <Image 
-            src={imagen} 
-            alt="Imagen de seguridad"
-            width={512}
-            height={512}
+          <ShieldExclamationIcon 
+            className="h-96 w-96 text-white"
           />
         </div>
       </div>
 
-      {/* Right Section (Login Form) */}
       <div style={{ 
         width: '50%', 
         display: 'flex', 
@@ -84,7 +70,7 @@ const Login = () => {
           <h2 style={{ fontSize: '2.5em', marginBottom: '20px', textAlign: 'center' }}>Iniciar sesión</h2>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginBottom: '15px' }}>
-              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Username</label>
+              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Nombre de usuario</label>
               <input
                 type="text"
                 value={username}
@@ -98,12 +84,12 @@ const Login = () => {
                   borderRadius: '4px',
                   fontSize: '1em'
                 }}
-                placeholder="Enter your username"
+                placeholder="Ingresa tu nombre de usuario"
                 required
               />
             </div>
             <div style={{ marginBottom: '15px' }}>
-              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Password</label>
+              <label style={{ fontSize: '1em', marginBottom: '5px', display: 'block' }}>Contraseña</label>
               <input
                 type="password"
                 value={password}
@@ -117,7 +103,7 @@ const Login = () => {
                   borderRadius: '4px',
                   fontSize: '1em'
                 }}
-                placeholder="Enter your password"
+                placeholder="Ingresa tu contraseña"
                 required
               />
             </div>
@@ -134,7 +120,7 @@ const Login = () => {
                 cursor: 'pointer'
               }}
             >
-              Iniciar Sesión
+              Iniciar sesión
             </button>
           </form>
         </div>

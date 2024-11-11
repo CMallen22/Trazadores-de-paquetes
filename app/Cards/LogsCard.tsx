@@ -63,7 +63,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
         </div>
       )}
       <div
-        className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 items-center p-2 cursor-pointer"
+        className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 items-center p-4 cursor-pointer" 
         onClick={toggleExpand}>
         <div className="flex items-center justify-center">
           {isExpanded ? (
@@ -131,7 +131,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
       </div>
 
       {isExpanded && (
-        <div className="flex justify-between space-x-4 mt-2 bg-gray-100 p-4 rounded-lg">
+        <div className="flex justify-between space-x-4 mt-4 bg-gray-100 p-4 rounded-lg">
           <div className={`p-6 rounded-lg text-center text-white ${color}`} style={{ width: "150px" }}>
             <p className="text-sm">Nivel de Riesgo</p>
             <p className="text-4xl font-bold">{Riesgo}</p>
@@ -140,7 +140,7 @@ const LogsCard = ({ Fuente, Destino, Protocolo, Area, Fecha, Riesgo, recomendaci
           </div>
 
           <div className="flex-1 p-4 bg-white rounded-lg shadow">
-            <h4 className="text-lg font-bold mb-2">Advertencia IA:</h4>
+            <h4 className="text-lg font-bold mb-2">Advertencia:</h4>
             <p>{advertencia_ia || "Sin advertencias disponibles."}</p>
           </div>
 

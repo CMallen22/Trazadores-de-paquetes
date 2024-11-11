@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import LogsCard from "../Cards/LogsCard";
 import { Inter } from "next/font/google";
-import { FilterIcon, ShieldExclamationIcon } from "@heroicons/react/outline";
+import { FilterIcon, ShieldExclamationIcon, SortAscendingIcon, ChatAltIcon } from "@heroicons/react/outline";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,11 @@ const RISK_LEVELS = [
   { label: "Alto", min: 67, max: 100, color: "text-red-600" },
 ];
 
-export default function App() {
+interface AppProps {
+  searchQuery: string;
+}
+
+export default function App({ searchQuery }: AppProps) {
   const [logs, setLogs] = useState<Log[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<Log[]>([]);
   const [isRiskDropdownOpen, setIsRiskDropdownOpen] = useState(false);
@@ -36,6 +40,14 @@ export default function App() {
   const [selectedProtocols, setSelectedProtocols] = useState<string[]>([]);
   const [areaOptions, setAreaOptions] = useState<string[]>([]);
   const [protocolOptions, setProtocolOptions] = useState<string[]>([]);
+
+  const [sortBy, setSortBy] = useState<'fecha' | 'riesgo'>('fecha'); 
+
+  const [isChatOpen, setIsChatOpen] = useState(false); 
+  const [chatMessages, setChatMessages] = useState<string[]>([]); 
+  const [userMessage, setUserMessage] = useState<string>("");
+
+  const chatIconRef = useRef<HTMLSpanElement>(null); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,31 +109,91 @@ export default function App() {
     setSelectedProtocols(newSelectedProtocols);
   };
 
+  const toggleDropdown = (dropdown: string) => {
+    if (dropdown === "risk") {
+      setIsRiskDropdownOpen(!isRiskDropdownOpen);
+    } else if (dropdown === "area") {
+      setIsAreaDropdownOpen(!isAreaDropdownOpen);
+    } else if (dropdown === "protocol") {
+      setIsProtocolDropdownOpen(!isProtocolDropdownOpen);
+    }
+  };
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
+  const sendMessage = () => {
+    if (userMessage.trim() !== "") {
+      setChatMessages([...chatMessages, userMessage]);
+      setUserMessage("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && userMessage.trim() !== "") {
+      sendMessage();
+    }
+  };
+
   useEffect(() => {
-    const riskFilteredLogs = logs.filter((log) =>
+    let filtered = logs.filter((log) =>
       selectedRisks.includes(getRiskLabel(log.riesgo))
     );
-    const areaFilteredLogs = riskFilteredLogs.filter((log) =>
+    filtered = filtered.filter((log) =>
       selectedAreas.includes(log.area)
     );
-    const protocolFilteredLogs = areaFilteredLogs.filter((log) =>
+    filtered = filtered.filter((log) =>
       selectedProtocols.includes(log.protocolo)
     );
-    setFilteredLogs(protocolFilteredLogs);
-  }, [selectedRisks, selectedAreas, selectedProtocols, logs]);
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (log) =>
+          log.fuente.includes(searchQuery) || log.destino.includes(searchQuery)
+      );
+    }
+
+    setFilteredLogs(filtered);
+  }, [selectedRisks, selectedAreas, selectedProtocols, logs, searchQuery]);
+
+  const handleSortToggle = () => {
+    setSortBy((prevSort) => (prevSort === 'fecha' ? 'riesgo' : 'fecha'));
+  };
+
+  const sortedLogs = filteredLogs.sort((a, b) => {
+    if (sortBy === 'fecha') {
+      return new Date(a.fecha).getTime() - new Date(b.fecha).getTime();
+    } else {
+      return b.riesgo - a.riesgo;
+    }
+  });
+
+  const chatPosition = chatIconRef.current
+    ? { 
+        top: chatIconRef.current.offsetTop + 150, 
+        left: chatIconRef.current.offsetLeft + 40 
+      }
+    : { top: 0, left: 0 };
 
   return (
     <main className={`flex min-h-screen flex-col items-center p-4 ${inter.className}`}>
       <div className="w-full space-y-4">
-        <div className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 p-2 font-semibold text-black border-b border-gray-300">
-          <span className="text-center"></span>
+        <div className="grid grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr,auto] gap-4 p-2 font-semibold text-black border-b border-gray-300 sticky top-0 bg-white z-10">
+          <span ref={chatIconRef} className="text-center">
+            <ChatAltIcon
+              className={`h-6 w-6 cursor-pointer ${isChatOpen ? "text-purple-500" : "text-black"}`}
+              onClick={toggleChat}
+            />
+          </span>
           <span>Fuente</span>
           <span>Destino</span>
           <span className="flex items-center relative">
             Protocolo
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isProtocolDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsProtocolDropdownOpen(!isProtocolDropdownOpen)}/>
+              onClick={() => toggleDropdown("protocol")}
+            />
             {isProtocolDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {protocolOptions.map((protocol) => (
@@ -130,7 +202,8 @@ export default function App() {
                       type="checkbox"
                       checked={selectedProtocols.includes(protocol)}
                       onChange={() => handleProtocolChange(protocol)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
+                    />
                     <label className="ml-2 text-gray-700">{protocol}</label>
                   </div>
                 ))}
@@ -141,7 +214,8 @@ export default function App() {
             Área
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isAreaDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsAreaDropdownOpen(!isAreaDropdownOpen)}/>
+              onClick={() => toggleDropdown("area")}
+            />
             {isAreaDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {areaOptions.map((area) => (
@@ -150,19 +224,21 @@ export default function App() {
                       type="checkbox"
                       checked={selectedAreas.includes(area)}
                       onChange={() => handleAreaChange(area)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
+                    />
                     <label className="ml-2 text-gray-700">{area}</label>
                   </div>
                 ))}
               </div>
             )}
           </span>
-          <span>Fecha</span>
+          <span className="flex items-center relative">Fecha</span>
           <span className="flex items-center relative">
             Riesgo
             <FilterIcon
               className={`h-6 w-6 ml-1 cursor-pointer ${isRiskDropdownOpen ? "text-purple-500" : "text-black"}`}
-              onClick={() => setIsRiskDropdownOpen(!isRiskDropdownOpen)}/>
+              onClick={() => toggleDropdown("risk")}
+            />
             {isRiskDropdownOpen && (
               <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
                 {RISK_LEVELS.map(({ label, color }) => (
@@ -171,7 +247,8 @@ export default function App() {
                       type="checkbox"
                       checked={selectedRisks.includes(label)}
                       onChange={() => handleRiskChange(label)}
-                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"/>
+                      className="h-4 w-4 text-purple-500 focus:ring-purple-500"
+                    />
                     <ShieldExclamationIcon className={`h-5 w-5 ml-2 ${color}`} />
                     <label className={`ml-2 ${color}`}>{label}</label>
                   </div>
@@ -179,21 +256,62 @@ export default function App() {
               </div>
             )}
           </span>
-          <span className="text-center"></span>
+          <span className="text-center">
+            <SortAscendingIcon
+              className={`h-6 w-6 ml-1 cursor-pointer ${sortBy === 'fecha' ? "text-black" : "text-purple-500"}`}
+              onClick={handleSortToggle}
+            />
+          </span>
         </div>
 
-        {filteredLogs.map((log, index) => (
-          <LogsCard
-            key={index}
-            Fuente={log.fuente}
-            Destino={log.destino}
-            Protocolo={log.protocolo}
-            Area={log.area}
-            Fecha={log.fecha}
-            Riesgo={log.riesgo}
-            advertencia_ia={log.advertencia_ia}
-            recomendacion_ia={log.recomendacion_ia}/>
-        ))}
+        {isChatOpen && (
+          <div
+            className="absolute bg-white border border-gray-300 rounded-lg shadow-lg z-20 p-4 w-96"
+            style={{ top: chatPosition.top, left: chatPosition.left }}
+          >
+            <div className="h-64 overflow-y-auto">
+              {chatMessages.map((msg, index) => (
+                <div key={index} className="mb-2">
+                  <p className={`text-gray-700 ${index % 2 === 0 ? "bg-gray-200 p-2 rounded-lg" : "bg-purple-100 p-2 rounded-lg text-purple-700"}`}>
+                    {msg}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Escribe un mensaje..."
+                value={userMessage}
+                onChange={(e) => setUserMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+                className="w-full p-2 border border-gray-300 rounded-l-lg"
+              />
+              <button
+                onClick={sendMessage}
+                className="bg-purple-500 text-white p-2 rounded-r-lg"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="overflow-y-auto max-h-[calc(100vh-160px)]"> 
+          {sortedLogs.map((log, index) => (
+            <LogsCard
+              key={index}
+              Fuente={log.fuente}
+              Destino={log.destino}
+              Protocolo={log.protocolo}
+              Area={log.area}
+              Fecha={log.fecha}
+              Riesgo={log.riesgo}
+              advertencia_ia={log.advertencia_ia}
+              recomendacion_ia={log.recomendacion_ia}
+            />
+          ))}
+        </div>
       </div>
     </main>
   );
