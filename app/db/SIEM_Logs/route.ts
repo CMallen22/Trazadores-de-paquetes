@@ -9,7 +9,21 @@ export async function GET() {
     
 
     // Execute the query with provided username and password
-    const result = await sql`select fuente, destino, protocolo, area, fecha, riesgo, advertencia_ia, recomendacion_ia from logs2;`;
+    const result = await sql`SELECT 
+    a.source_ip, 
+    a.host_ip, 
+    a.descripcion, 
+    a.protocolo, 
+    a.area, 
+    a.fecha, 
+    a.riesgo, 
+    r.respuesta
+FROM 
+    alertas a
+INNER JOIN 
+    ai_respuestas r 
+ON 
+    a.id_alert = r.id_alert;`;
 
     // Assuming 'login' function returns true if successful
     const Logs = result.rows

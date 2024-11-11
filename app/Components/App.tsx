@@ -8,14 +8,14 @@ import { FilterIcon, ShieldExclamationIcon, SortAscendingIcon, ChatAltIcon } fro
 const inter = Inter({ subsets: ["latin"] });
 
 type Log = {
-  fuente: string;
-  destino: string;
+  source_ip: string;
+  host_ip: string;
   protocolo: string;
   area: string;
   fecha: string;
   riesgo: number;
-  advertencia_ia: string;
-  recomendacion_ia: string;
+  descripcion: string;
+  respuesta: string;
 };
 
 const RISK_LEVELS = [
@@ -150,7 +150,7 @@ export default function App({ searchQuery }: AppProps) {
     if (searchQuery) {
       filtered = filtered.filter(
         (log) =>
-          log.fuente.includes(searchQuery) || log.destino.includes(searchQuery)
+          log.source_ip.includes(searchQuery) || log.host_ip.includes(searchQuery)
       );
     }
 
@@ -301,14 +301,14 @@ export default function App({ searchQuery }: AppProps) {
           {sortedLogs.map((log, index) => (
             <LogsCard
               key={index}
-              Fuente={log.fuente}
-              Destino={log.destino}
+              Fuente={log.source_ip}
+              Destino={log.host_ip}
               Protocolo={log.protocolo}
               Area={log.area}
               Fecha={log.fecha}
               Riesgo={log.riesgo}
-              advertencia_ia={log.advertencia_ia}
-              recomendacion_ia={log.recomendacion_ia}
+              advertencia_ia={log.descripcion}
+              recomendacion_ia={log.respuesta}
             />
           ))}
         </div>
