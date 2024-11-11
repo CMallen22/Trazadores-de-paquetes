@@ -9,11 +9,9 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  // Verificar si el usuario está autenticado
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (!isAuthenticated) {
-      // Si no está autenticado, redirigir al login
       router.push("/login");
     }
   }, [router]);
