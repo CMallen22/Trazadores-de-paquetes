@@ -2,6 +2,8 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
+export const revalidate = 0; // Forces server-side freshness for each request
+
 export async function GET() {
   try {
     
