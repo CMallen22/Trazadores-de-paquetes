@@ -19,7 +19,7 @@ const [users, setUsers] = useState<User[]>(
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/db/getUsers");
+        const response = await fetch("https://trazadores-de-paquetes-p1zkk7llj-chalkys-projects-ed90ac4e.vercel.app/db/getUsers");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
